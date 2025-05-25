@@ -3,8 +3,6 @@ from os import mkdir, listdir
 from os.path import (
     exists,
     dirname,
-    #split,
-    #commonpath,
     isfile,
     join
 )
@@ -27,7 +25,7 @@ def read_file_contents(file):
     contents = open(file, "r")
     return contents.read()
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating path from\n{from_path} -> {dest_path} from {template_path}")
     """ LOADING FILES """
     origin_file = read_file_contents(from_path)
@@ -42,7 +40,11 @@ def generate_page(from_path, template_path, dest_path):
     """ LOADING TITLE AND CONTENT TO HTML PAGE """
     html_page = temp_file.replace("{{ Title }}", "{Title}") \
                 .replace("{{ Content }}", "{Content}") \
-                .format(Title = content_title, Content = origin_html )
+                .format(Title = content_title, Content = origin_html ) \
+                .replace('href="/', f'href="/{basepath}/') \
+                .replace('src="/', f'src="/{basepath}/') 
+
+    print(html_page)
 
     if not exists(dirname(dest_path)):
         directories = dirname(dest_path).split("/")[1:]
@@ -58,7 +60,7 @@ def generate_page(from_path, template_path, dest_path):
     html_file.write(html_page)
                 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
 
     content_files = listdir(dir_path_content)
     for file in content_files:
@@ -66,12 +68,12 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
         dest_path = join(dest_dir_path, file)
         if isfile(file_path):
             dest_path = dest_path.replace(".md", ".html")
-            generate_page(file_path, template_path, dest_path)
+            generate_page(file_path, template_path, dest_path, basepath)
         elif exists(dest_path):
             pass
         else:
             mkdir(dest_path)
-            generate_pages_recursive(file_path, template_path, dest_path)
+            generate_pages_recursive(file_path, template_path, dest_path, basepath)
 
 
 
