@@ -41,8 +41,8 @@ def generate_page(from_path, template_path, dest_path, basepath):
     html_page = temp_file.replace("{{ Title }}", "{Title}") \
                 .replace("{{ Content }}", "{Content}") \
                 .format(Title = content_title, Content = origin_html ) \
-                .replace('href="/', f'href="/{basepath}/') \
-                .replace('src="/', f'src="/{basepath}/') 
+                .replace('href="/', f'href="{basepath}') \
+                .replace('src="/', f'src="{basepath}') 
 
     print(html_page)
 
