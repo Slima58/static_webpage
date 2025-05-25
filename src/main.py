@@ -10,7 +10,7 @@ content_dir_path = "./content"
 template_path = "./template.hml"
 docs_dir_path = "./docs"
 
-basepath =  "/" if len(sys.argv) < 2 else sys.arg[1]
+basepath =  "/" if len(sys.argv) < 2 else sys.argv[1]
 
 def main():
     
